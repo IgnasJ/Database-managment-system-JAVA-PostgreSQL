@@ -1,0 +1,35 @@
+CREATE TABLE igja2281.Klientai(
+	AK VARCHAR(11) NOT NULL,
+	Vardas VARCHAR(30),
+	Pavarde VARCHAR(30),
+	Telefono_numeris VARCHAR(12) DEFAULT '-',
+	Adresas VARCHAR(30) DEFAULT '-',
+	PRIMARY KEY (AK)
+);
+
+CREATE TABLE igja2281.Modeliai(
+	ID SERIAL NOT NULL,
+	Gamintojas VARCHAR(30),
+	Marke VARCHAR(30),
+	Metai INT NOT NULL CHECK (Metai > 1900 AND  Metai < date_part('year', CURRENT_DATE) + 1),
+	PRIMARY KEY (ID)
+);
+
+CREATE TABLE igja2281.Automobiliai(
+	Valstybinis_numeris VARCHAR(6) NOT NULL,
+	Modelis INT,
+	Kaina INT DEFAULT 0 CHECK(Kaina > 0),
+	PRIMARY KEY (Valstybinis_numeris),
+	FOREIGN KEY (Modelis) REFERENCES Modeliai ON DELETE RESTRICT ON UPDATE RESTRICT
+);
+
+CREATE TABLE igja2281.Nuomos(
+	ID SERIAL NOT NULL,
+	Klientas VARCHAR(11),
+	Automobilis VARCHAR(6),
+	Paimta DATE NOT NULL,
+	Grazinta DATE CHECK (Grazinta <= CURRENT_DATE),
+	PRIMARY KEY (ID),
+	FOREIGN KEY (Klientas) REFERENCES Klientai ON DELETE RESTRICT ON UPDATE RESTRICT,
+	FOREIGN KEY (Automobilis) REFERENCES Automobiliai ON DELETE RESTRICT ON UPDATE RESTRICT
+);
